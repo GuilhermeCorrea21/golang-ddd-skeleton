@@ -3,13 +3,12 @@ package service
 import (
 	customer_dto "architecture/internal/domain/customer/dto"
 	"architecture/internal/domain/model"
-	"fmt"
 )
 
 type (
 	Repository interface {
 		GetCustomers() *[]model.Customer
-		CreateCustomer(newCustomer customer_dto.CreateCustomerStruct) (*model.Customer, error)
+		CreateCustomer(newCustomer model.Customer) (*model.Customer, error)
 	}
 
 	Service struct {
@@ -28,6 +27,15 @@ func (s *Service) GetCustomers() *[]model.Customer {
 }
 
 func (s *Service) CreateCustomer(newCustomer customer_dto.CreateCustomerStruct) (*model.Customer, error) {
-	fmt.Println("newCustomer1: ", newCustomer)
-	return s.repository.CreateCustomer(newCustomer)
+	customer := model.Customer{
+		Name:   newCustomer.Name,
+		Active: true,
+	}
+
+	resp, err := s.repository.CreateCustomer(customer)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }

@@ -9,7 +9,7 @@ type (
 	Repository interface {
 		FindUserByID(id string) (*model.User, error)
 		GetUsers() *[]model.User
-		Create(user user_dto.CreateUserStruct) (*model.User, error)
+		Create(user model.User) (*model.User, error)
 	}
 
 	Service struct {
@@ -31,6 +31,16 @@ func (s *Service) GetUsers() *[]model.User {
 	return s.repository.GetUsers()
 }
 
-func (s *Service) Create(user user_dto.CreateUserStruct) (*model.User, error) {
-	return s.repository.Create(user)
+func (s *Service) Create(newUser user_dto.CreateUserStruct) (*model.User, error) {
+	user := model.User{
+		Name:  newUser.Name,
+		Email: newUser.Email,
+	}
+
+	resp, err := s.repository.Create(user)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }

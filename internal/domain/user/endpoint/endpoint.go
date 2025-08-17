@@ -60,5 +60,11 @@ func (ue *UserEndpoint) CreateUser(c *gin.Context) {
 		return
 	}
 
-	ue.service.Create(user)
+	resp, err := ue.service.Create(user)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
 }

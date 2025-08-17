@@ -51,5 +51,5 @@ func (ce *CustomerEndpoint) CreateCustomer(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, "Customer cadastrada com sucesso")
+	c.JSON(http.StatusOK, gin.H{"message": "Customer cadastrada com sucesso"})
 }

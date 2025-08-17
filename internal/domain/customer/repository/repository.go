@@ -1,9 +1,8 @@
 package repository
 
 import (
-	customer_dto "architecture/internal/domain/customer/dto"
+	customer_error "architecture/internal/domain/customer/error"
 	"architecture/internal/domain/model"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -37,16 +36,10 @@ func (r *Repository) GetCustomers() *[]model.Customer {
 	return &customer
 }
 
-func (r *Repository) CreateCustomer(newCustomer customer_dto.CreateCustomerStruct) (*model.Customer, error) {
-	customer := model.Customer{
-		Name:   newCustomer.Name,
-		Active: true,
-	}
-	fmt.Println("customer: ", newCustomer)
-
-	if err := r.db.Create(&customer).Error; err != nil {
-		return nil, err
+func (r *Repository) CreateCustomer(newCustomer model.Customer) (*model.Customer, error) {
+	if err := r.db.Create(&newCustomer).Error; err != nil {
+		return nil, customer_error.CreatingCustomer()
 	}
 
-	return &customer, nil
+	return &newCustomer, nil
 }

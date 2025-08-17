@@ -2,7 +2,6 @@ package repository
 
 import (
 	"architecture/internal/domain/model"
-	user_dto "architecture/internal/domain/user/dto"
 	user_error "architecture/internal/domain/user/error"
 
 	"gorm.io/gorm"
@@ -48,15 +47,10 @@ func (r *Repository) GetUsers() *[]model.User {
 	return &users
 }
 
-func (r *Repository) Create(newUser user_dto.CreateUserStruct) (*model.User, error) {
-	user := model.User{
-		Name:  newUser.Name,
-		Email: newUser.Email,
+func (r *Repository) Create(newUser model.User) (*model.User, error) {
+	if err := r.db.Create(&newUser).Error; err != nil {
+		return nil, user_error.CreatingUser()
 	}
 
-	if err := r.db.Create(&user).Error; err != nil {
-		return nil, err
-	}
-
-	return &user, nil
+	return &newUser, nil
 }
